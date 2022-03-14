@@ -2,7 +2,7 @@ use std::io::{Stdout, Write};
 use termion::raw::{RawTerminal};
 use std::fs::File;
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Todo<'a> {
     pub text: &'a str,
     pub completed: bool,
@@ -10,11 +10,11 @@ pub struct Todo<'a> {
 }
 
 impl<'a> Todo<'a> {
-    pub fn new(text: &'a str) -> Todo<'a> {
+    pub fn new(text: &'a str, completed: bool, starred: bool) -> Todo<'a> {
         Todo {
             text,
-            completed: false,
-            starred: false
+            completed,
+            starred
         }
     }
 }
@@ -38,6 +38,7 @@ pub fn write_todos(path: &str, todos: &[Todo]) {
             true => '1',
             false => '0'
         });
+        f_text.push('~');
     });
     std::fs::write(path, f_text.as_str());
 }

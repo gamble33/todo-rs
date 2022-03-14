@@ -9,46 +9,23 @@ fn read_file(path: &str) -> String {
 }
 
 fn main() {
-
-    /** let f = match std::fs::File::open("todos.todo") {
-        Ok(file) => file,
-        Err(_) => match std::fs::File::create("todos.todo") {
-            Ok(file) => file,
-            Err(e) => panic!("{}", e)
-        }
-    };
-    **/
+    
+    let mut todos: Vec<Todo> = Vec::new();
 
     let file_text = read_file("todos.todo");
-    let todo_count = file_text.matches('~').count() / 2;
+    let todo_count = file_text.matches('~').count() / 3;
+    println!("{}", todo_count);
     let mut split = file_text.split('~');
     for i in 0..todo_count {
         let text = split.next().clone().unwrap();
-        let completed = match split.next().clone().unwrap() {
-            "0" => true,
-            "1" => false
-        };
-        let starred = match split.next().clone().unwrap() {
-            "0" => true,
-            "1" => false
-        };
-        println!("{}, {}, {}", text, completed, starred);
+        let completed: bool = split.next().unwrap() == String::from("1");
+        let starred: bool = split.next().unwrap() == String::from("1");
+        let todo = todo_rs::Todo::new(text, completed, starred);
+        todos.push(todo);
     }
-
-    
-    println!("{:?}", todo_count);
-    
-    return;
 
     let stdin = stdin();
     let mut stdout: RawTerminal<Stdout> = stdout().into_raw_mode().unwrap();
-
-    let mut todos: Vec<Todo> = vec![
-        Todo::new("Clean Dishes"),
-        Todo::new("Buy a Bread"),
-        Todo::new("Switch to Kali Linux"),
-        Todo::new("Make to-do app"),
-    ];
 
     write!(stdout,
         "{}{}[q] or Ctrl+C to exit.{}",
