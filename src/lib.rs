@@ -21,14 +21,7 @@ impl<'a> Todo<'a> {
 
 pub fn read_todos<'a>(path: &str) -> Vec<Todo<'a>> {
     let mut todos: Vec<Todo<'a>> = Vec::new();
-    let string = std::fs::read_to_string(path).unwrap();
-    let a_str: &'a str = string.as_str();
-    let split_string = a_str.split::<'a>('~');
-    let mut v: Vec<Todo<'a>> = Vec::new();
-    for val in split_string {
-        v.push(Todo::<'a>::new(val));
-    }
-    return v;
+    return todos;
 }
 
 pub fn write_todos(path: &str, todos: &[Todo]) {
