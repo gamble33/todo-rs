@@ -4,20 +4,16 @@ use termion::event::Key;
 use std::io::{stdout, stdin, Stdout, Write};
 use todo_rs::Todo;
 
-fn read_file(path: &str) -> String {
-    std::fs::read_to_string(path).unwrap()
-}
+
 
 fn main() {
-    
-    let mut todos: Vec<Todo> = Vec::new();
 
-    let file_text = read_file("todos.todo");
+    let mut todos: Vec<Todo> = Vec::new();
+    let file_text = todo_rs::read_file("todos.todo");
     let todo_count = file_text.matches('~').count() / 3;
-    println!("{}", todo_count);
     let mut split = file_text.split('~');
     for i in 0..todo_count {
-        let text = split.next().clone().unwrap();
+        let text: &str = split.next().clone().unwrap();
         let completed: bool = split.next().unwrap() == String::from("1");
         let starred: bool = split.next().unwrap() == String::from("1");
         let todo = todo_rs::Todo::new(text, completed, starred);

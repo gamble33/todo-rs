@@ -20,8 +20,18 @@ impl<'a> Todo<'a> {
 }
 
 pub fn read_todos<'a>(path: &str) -> Vec<Todo<'a>> {
-    let todos: Vec<Todo<'a>> = Vec::new();   
-    todos
+    let mut todos: Vec<Todo> = Vec::new();
+    let file_text = read_file("todos.todo");
+    let todo_count = file_text.matches('~').count() / 3;
+    println!("{}", todo_count);
+    let mut split = file_text.split('~');
+    for i in 0..todo_count {
+        let text = split.next().clone().unwrap();
+        let completed: bool = split.next().unwrap() == String::from("1");
+        let starred: bool = split.next().unwrap() == String::from("1");
+        let todo = todo_rs::Todo::new(text, completed, starred);
+        todos.push(todo);
+    }
 }
 
 pub fn write_todos(path: &str, todos: &[Todo]) {
@@ -69,8 +79,4 @@ pub fn render_todos(stdout: &mut RawTerminal<Stdout>, todos: &[Todo], todo_curr:
         ).unwrap();
        
     }
-}
-
-pub fn read_file(path: &str) -> String {
-    std::fs::read_to_string(path).unwrap()
 }
